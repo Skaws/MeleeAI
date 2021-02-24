@@ -1,7 +1,10 @@
 import melee
+from melee.enums import Action,Button
 import keyboard
 import math
 import recovery
+import firefox
+from tech import multishine, waveshine,chain_ws
 console = melee.Console(path=r"E:\Documents\3rdYear\Project\FM-Slippi")
 controller = melee.Controller(console=console, port=1, type=melee.ControllerType.STANDARD)
 console.run()
@@ -10,7 +13,8 @@ controller.connect()
 
 def main():
     currStocks = 4
-    respawn=False
+    WS = waveshine.WaveShine()
+    #infinite = chain_ws.ChainWaveShines()
     while True:
         gamestate = console.step()
         # Press buttons on your controller based on the GameState here!
@@ -18,31 +22,25 @@ def main():
         if gamestate.menu_state in [melee.Menu.IN_GAME, melee.Menu.SUDDEN_DEATH]:
             ai_state=gamestate.player[1]
             player_state=gamestate.player[2]
-            ai_offstage = gamestate.player[1].off_stage
-            #print("This is the Player's X position: " + str(gamestate.player[2].x) + "This is the Player's Y position: " + str(gamestate.player[2].y))
-            # print("Current Number of stocks: " + str(gamestate.player[1].stock))
-            # print("Currently tracked number of stocks: " + str(currStocks))
-            #if the AI stock count has changed (i.e it's lost a stock)
-            
             #print("This is the actionable state: " + str(player_state.action_frame))
+            print("This is the players current action " + str(player_state.action))
             
-            #print("This is the players current action " + str(player_state.action))
             controller.release_all()
-            # print("Is the AI offstage? " + str(ai_offstage))
             
-            edgepos=recovery.getEdgePos(gamestate)
-            aiposition = (ai_state.x,ai_state.y)
-            xdir,ydir = recovery.edgeAngleCalc(aiposition,edgepos)
-            print("This is the corresponding input " + str(xdir) + "," + str(ydir))
-            #print("Is the B button being pressed " + str(controller.current.button[melee.enums.Button.BUTTON_B]))
-
-            if(ai_offstage==True and ai_state.hitstun_frames_left==0):
-                if(ai_state.action==melee.enums.Action.EDGE_HANGING):
-                    print("Back at ledge")
-                    controller.tilt_analog(melee.enums.Button.BUTTON_MAIN,1,0.5)
+            onleft = int(ai_state.x < player_state.x)
+            if(ai_state.action==Action.ON_HALO_WAIT):
+                if(controller.prev.button[Button.BUTTON_A]==True):
+                    print("Releasing")
+                    controller.release_all()
                 else:
-                    print("Attempting Firefox ")
-                    recovery.fireFox(ai_state,controller,xdir,ydir)
+                    print("Attacking")
+                    controller.tilt_analog(Button.BUTTON_MAIN,1,0.5)
+                    controller.press_button(Button.BUTTON_A)
+            elif(ai_state.on_ground==True):
+                WS.step(controller,ai_state,gamestate,onleft)
+                #infinite.step(controller,ai_state,player_state,gamestate)
+            else:
+                recovery.Recover(ai_state,gamestate,controller)
         else:
             melee.menuhelper.MenuHelper.menu_helper_simple(gamestate,
                                                 controller,
