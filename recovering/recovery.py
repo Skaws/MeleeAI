@@ -1,8 +1,8 @@
 import melee
 import keyboard
 import math
-import firefox 
-import illusion
+from .firefox import fireFox
+from .illusion import Illusion
 from melee.enums import Action,Button
 def facingLedge(ai_facing,ai_pos):
     facing = (ai_facing == (ai_pos<0))
@@ -15,6 +15,10 @@ def getEdgePos(gamestate):
     else:
         edgepos = -1 * melee.stages.EDGE_POSITION[gamestate.stage]
     return edgepos
+def getEdgeDist(gamestate,ai_state):
+    edgepos = getEdgePos(gamestate)
+    edgedist = abs(ai_state.x - edgepos)
+    return edgedist
 def edgeAngleCalc(ai_pos,edgepos):
     #if the player is on the left of the stage we want positive x and negative x if the players on the right so the equation for the X distance is
     dist_x = edgepos-ai_pos[0]
@@ -47,8 +51,8 @@ def Recover(ai_state,gamestate,controller):
         else:
             print("AI current pos " + str(ai_state.y))
             if(-16.4 < ai_state.y < -5) and (5 < edgedist < 88):
-                illusion.Illusion(ai_state.action,controller,ai_state.x,ai_state.y)
+                Illusion(ai_state.action,controller,ai_state.x,ai_state.y)
             else:
                 print("Attempting Firefox ")
-                firefox.fireFox(ai_state,controller,xdir,ydir)
+                fireFox(ai_state,controller,xdir,ydir)
     

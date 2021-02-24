@@ -1,4 +1,4 @@
-from recovery import edgeAngleCalc
+from .recovery import edgeAngleCalc
 from assertpy import assert_that
 
 def test_edgeAngleCalc_left_of_stage():

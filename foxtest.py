@@ -2,9 +2,9 @@ import melee
 from melee.enums import Action,Button
 import keyboard
 import math
-import recovery
-import firefox
-from tech import multishine, waveshine,chain_ws
+from recovering.recovery import Recover
+from tech.chain_ws import ChainWaveShines
+from tech.waveshine import WaveShine
 console = melee.Console(path=r"E:\Documents\3rdYear\Project\FM-Slippi")
 controller = melee.Controller(console=console, port=1, type=melee.ControllerType.STANDARD)
 console.run()
@@ -13,8 +13,8 @@ controller.connect()
 
 def main():
     currStocks = 4
-    WS = waveshine.WaveShine()
-    #infinite = chain_ws.ChainWaveShines()
+    #WS = WaveShine()
+    chainshine = ChainWaveShines()
     while True:
         gamestate = console.step()
         # Press buttons on your controller based on the GameState here!
@@ -37,10 +37,11 @@ def main():
                     controller.tilt_analog(Button.BUTTON_MAIN,1,0.5)
                     controller.press_button(Button.BUTTON_A)
             elif(ai_state.on_ground==True):
-                WS.step(controller,ai_state,gamestate,onleft)
-                #infinite.step(controller,ai_state,player_state,gamestate)
+                #WS.step(controller,ai_state,gamestate,onleft)
+                chainshine.step(controller,ai_state,player_state,gamestate)
             else:
-                recovery.Recover(ai_state,gamestate,controller)
+                chainshine.infinite=False
+                Recover(ai_state,gamestate,controller)
         else:
             melee.menuhelper.MenuHelper.menu_helper_simple(gamestate,
                                                 controller,
