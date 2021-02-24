@@ -5,7 +5,8 @@ import math
 from recovering.recovery import Recover
 from tech.chain_ws import ChainWaveShines
 from tech.waveshine import WaveShine
-console = melee.Console(path=r"E:\Documents\3rdYear\Project\FM-Slippi")
+from config import slippilocation
+console = melee.Console(path=slippilocation)
 controller = melee.Controller(console=console, port=1, type=melee.ControllerType.STANDARD)
 console.run()
 console.connect()
@@ -20,6 +21,7 @@ def main():
         # Press buttons on your controller based on the GameState here!
         costume = 0
         if gamestate.menu_state in [melee.Menu.IN_GAME, melee.Menu.SUDDEN_DEATH]:
+            # print("menu navigated")
             ai_state=gamestate.player[1]
             player_state=gamestate.player[2]
             #print("This is the actionable state: " + str(player_state.action_frame))
@@ -43,6 +45,7 @@ def main():
                 chainshine.infinite=False
                 Recover(ai_state,gamestate,controller)
         else:
+            # print("trying menuhelper")
             melee.menuhelper.MenuHelper.menu_helper_simple(gamestate,
                                                 controller,
                                                 melee.Character.FOX,
