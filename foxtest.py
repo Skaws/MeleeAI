@@ -3,6 +3,7 @@ from melee.enums import Action,Button
 import keyboard
 import math
 from recovering.recovery import Recover
+from recovering.recovery import getEdgeDist
 from tech.chain_ws import ChainWaveShines
 from tech.waveshine import WaveShine
 from config import slippilocation
@@ -23,13 +24,14 @@ def main():
         if gamestate.menu_state in [melee.Menu.IN_GAME, melee.Menu.SUDDEN_DEATH]:
             # print("menu navigated")
             ai_state=gamestate.player[1]
-            player_state=gamestate.player[2]
-            #print("This is the actionable state: " + str(player_state.action_frame))
-            print("This is the players current action " + str(player_state.action))
+            enemy_state=gamestate.player[2]
+            #print("This is the actionable state: " + str(enemy_state.action_frame))
+            #print("This is the AIs current action " + str(ai_state.action))
+            #print("This is the Players current action " + str(ai_state.action))
             
             controller.release_all()
             
-            onleft = int(ai_state.x < player_state.x)
+            onleft = int(ai_state.x < enemy_state.x)
             if(ai_state.action==Action.ON_HALO_WAIT):
                 if(controller.prev.button[Button.BUTTON_A]==True):
                     print("Releasing")
@@ -39,11 +41,17 @@ def main():
                     controller.tilt_analog(Button.BUTTON_MAIN,1,0.5)
                     controller.press_button(Button.BUTTON_A)
             elif(ai_state.on_ground==True):
+                controller.release_all()
                 #WS.step(controller,ai_state,gamestate,onleft)
-                chainshine.step(controller,ai_state,player_state,gamestate)
+                chainshine.step(controller,ai_state,enemy_state,gamestate)
             else:
                 chainshine.infinite=False
-                Recover(ai_state,gamestate,controller)
+                controller.release_all()
+                if(getEdgeDist(gamestate.stage,ai_state.x)<3):
+                    dashdir=int(ai_state.x<0)
+                    controller.tilt_analog(Button.BUTTON_MAIN,dashdir,0.5)
+                else:
+                    Recover(ai_state,gamestate.stage,controller)
         else:
             # print("trying menuhelper")
             melee.menuhelper.MenuHelper.menu_helper_simple(gamestate,

@@ -7,17 +7,17 @@ from melee.enums import Action,Button
 def facingLedge(ai_facing,ai_pos):
     facing = (ai_facing == (ai_pos<0))
     return facing
-def getEdgePos(gamestate):
+def getEdgePos(currstage,aixpos):
     edgepos=0
     #retrieve the x coord of the edge on the stage for puff to get back to
-    if(gamestate.player[2].x>0):
-        edgepos = melee.stages.EDGE_POSITION[gamestate.stage]
+    if(aixpos>0):
+        edgepos = melee.stages.EDGE_POSITION[currstage]
     else:
-        edgepos = -1 * melee.stages.EDGE_POSITION[gamestate.stage]
+        edgepos = -1 * melee.stages.EDGE_POSITION[currstage]
     return edgepos
-def getEdgeDist(gamestate,ai_state):
-    edgepos = getEdgePos(gamestate)
-    edgedist = abs(ai_state.x - edgepos)
+def getEdgeDist(currstage,aipos_x):
+    edgepos = getEdgePos(currstage,aipos_x)
+    edgedist = abs(aipos_x - edgepos)
     return edgedist
 def edgeAngleCalc(ai_pos,edgepos):
     #if the player is on the left of the stage we want positive x and negative x if the players on the right so the equation for the X distance is
@@ -29,9 +29,9 @@ def edgeAngleCalc(ai_pos,edgepos):
     xtilt = dist_x/normalise
     ytilt= dist_y/normalise
     return (xtilt,ytilt)
-def Recover(ai_state,gamestate,controller):
+def Recover(ai_state,stage,controller):
     ai_offstage = ai_state.off_stage
-    edgepos=getEdgePos(gamestate)
+    edgepos=getEdgePos(stage,ai_state.x)
     aiposition = (ai_state.x,ai_state.y)
     xdir,ydir = edgeAngleCalc(aiposition,edgepos)
     #print("This is the corresponding input " + str(xdir) + "," + str(ydir))
