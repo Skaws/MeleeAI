@@ -2,10 +2,12 @@ import melee
 from melee.enums import Action,Button
 import keyboard
 import math
+from melee import framedata
 from recovering.recovery import Recover
 from recovering.recovery import getEdgeDist
 from tech.chain_ws import ChainWaveShines
 from tech.waveshine import WaveShine
+from tech.smashattack import SmashAttack
 from config import slippilocation
 console = melee.Console(path=slippilocation)
 controller = melee.Controller(console=console, port=1, type=melee.ControllerType.STANDARD)
@@ -17,6 +19,7 @@ def main():
     currStocks = 4
     #WS = WaveShine()
     chainshine = ChainWaveShines()
+    smashhh = SmashAttack()
     while True:
         gamestate = console.step()
         # Press buttons on your controller based on the GameState here!
@@ -26,7 +29,8 @@ def main():
             ai_state=gamestate.player[1]
             enemy_state=gamestate.player[2]
             #print("This is the actionable state: " + str(enemy_state.action_frame))
-            #print("This is the AIs current action " + str(ai_state.action))
+            print("This is the AIs current action " + str(ai_state.action) +" on frame: " + str(ai_state.action_frame))
+            #print("This is the Player's current action " + str(enemy_state.action) +" on frame: " + str(enemy_state.action_frame))
             #print("This is the Players current action " + str(ai_state.action))
             
             controller.release_all()
@@ -44,10 +48,12 @@ def main():
                 controller.release_all()
                 #WS.step(controller,ai_state,gamestate,onleft)
                 chainshine.step(controller,ai_state,enemy_state,gamestate)
+                #smashhh.step(ai_state,enemy_state,controller,framedata)
+                #print("Curr dist: " + str(gamestate.distance))
             else:
                 chainshine.infinite=False
                 controller.release_all()
-                if(getEdgeDist(gamestate.stage,ai_state.x)<3):
+                if(getEdgeDist(gamestate.stage,ai_state.x)<5):
                     dashdir=int(ai_state.x<0)
                     controller.tilt_analog(Button.BUTTON_MAIN,dashdir,0.5)
                 else:
