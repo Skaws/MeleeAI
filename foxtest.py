@@ -7,7 +7,9 @@ from recovering.recovery import Recover
 from recovering.recovery import getEdgeDist
 from tech.chain_ws import ChainWaveShines
 from tech.waveshine import WaveShine
+from tech.multishine import MultiShine
 from tech.smashattack import SmashAttack
+from tech.intumble import InTumble
 from config import slippilocation
 console = melee.Console(path=slippilocation)
 controller = melee.Controller(console=console, port=1, type=melee.ControllerType.STANDARD)
@@ -19,6 +21,7 @@ def main():
     currStocks = 4
     #WS = WaveShine()
     chainshine = ChainWaveShines()
+    tumbleCheck = InTumble()
     smashhh = SmashAttack()
     while True:
         gamestate = console.step()
@@ -32,7 +35,7 @@ def main():
             print("This is the AIs current action " + str(ai_state.action) +" on frame: " + str(ai_state.action_frame))
             #print("This is the Player's current action " + str(enemy_state.action) +" on frame: " + str(enemy_state.action_frame))
             #print("This is the Players current action " + str(ai_state.action))
-            
+            #print("Is the player facing right? " + str(enemy_state.facing))
             controller.release_all()
             
             onleft = int(ai_state.x < enemy_state.x)
@@ -44,10 +47,14 @@ def main():
                     print("Attacking")
                     controller.tilt_analog(Button.BUTTON_MAIN,1,0.5)
                     controller.press_button(Button.BUTTON_A)
-            elif(ai_state.on_ground==True):
-                controller.release_all()
+            elif(ai_state.off_stage==False):
+                #controller.release_all()
+                #MultiShine(controller,ai_state,gamestate)
                 #WS.step(controller,ai_state,gamestate,onleft)
-                chainshine.step(controller,ai_state,enemy_state,gamestate)
+                needTech=tumbleCheck.step(ai_state, enemy_state,controller)
+                if(needTech==False):
+                    chainshine.step(controller,ai_state,enemy_state,gamestate)
+                #print("controller currently pointing in direction: " +str(controller.current.main_stick[0]))
                 #smashhh.step(ai_state,enemy_state,controller,framedata)
                 #print("Curr dist: " + str(gamestate.distance))
             else:

@@ -11,8 +11,6 @@ from recovering.recovery import Recover,getEdgeDist
 class ChainWaveShines():
     def __init__(self):
         self.shineRange = 9.9
-        
-        self.shineDashRange = 11.8
         self.JCUpSmash = False
         self.WS = WaveShine()
         self.RUN = Run()
@@ -50,7 +48,11 @@ class ChainWaveShines():
         #boolean variable that holds whether the AI is on the left of the player
         onleft = int(ai_state.x < enemy_state.x)
         ledge_dist = getEdgeDist(gamestate.stage,ai_state.x)
-
+        self.shineRange=9.9
+        if(ai_state.action==Action.RUNNING):
+            self.shineRange=12.8
+        if(ai_state.action==Action.DASHING):
+            self.shineRange=7.1
         # slideleft = framedata.slide_distance()
         #print("can the AI infinite?" + str(self.infinite))
         #print("Player attack speed: " + str(enemy_state.speed_x_attack))
@@ -103,6 +105,7 @@ class ChainWaveShines():
             crossup = (ai_state.x<enemy_state.x<0) or (ai_state.x>enemy_state.x>0)
 
             if(crossup and (gamestate.distance<self.shineRange)):
+                #print("controller previously pointing in direction: " +str(controller.prev.main_stick[0]))
                 print("WaveShining post crossup")
                 print("Curr distance from enemy: "+ str(gamestate.distance))
                 self.WS.step(controller,ai_state,enemy_state,gamestate.stage)

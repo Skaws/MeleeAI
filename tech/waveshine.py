@@ -21,10 +21,10 @@ class WaveShine():
         if(ai_state.action==Action.DASHING):
             print("AI is in DASH TURNAROUND SO WE CAN DO SHIT")
             turndir = not(ai_state.facing)
-            print("AI is currently facing left? " +str(ai_state.facing))
-            print("AI's new direction is currently facing left? " +str(turndir))
+            print("AI is currently facing right? " +str(ai_state.facing))
+            print("AI's new direction is currently facing right? " +str(turndir))
             controller.release_button(Button.BUTTON_B)
-            controller.tilt_analog(Button.BUTTON_MAIN,turndir,0.5)
+            controller.tilt_analog(Button.BUTTON_MAIN,int(turndir),0.5)
             return 
         jumpcancel = (ai_state.action == Action.KNEE_BEND) and (ai_state.action_frame==3)
         #if the AI is in jumpsquat
