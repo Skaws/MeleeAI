@@ -13,7 +13,7 @@ The LibMelee python Library can be installed through pip using the following com
 
 The ISO file can be obtained through purchasing a copy of Super Smash Bros. Melee and using ISO extraction software to obtain the file. A multitude of methods are available which can be found here: https://ellisworkshop.com/dump-nintendo-discs-gamecube-wii-wiiu-games/
 
-After these 3 requirements are met, create a python program called **"config.py"** in this folder. Within this copy paste the following code:
+After these 3 requirements are met, create a python program called **"config.py"** in this folder. Within this program copy paste the following code:
 ```
 slippilocation = r"[INSERT SLIPPI FOLDER PATH]"
 ```
