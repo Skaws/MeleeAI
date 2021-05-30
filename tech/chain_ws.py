@@ -119,9 +119,18 @@ class ChainWaveShines():
             else:
                 print("WaveShining")
                 self.WS.step(controller,ai_state,enemy_state,gamestate.stage)
+                
+                print("----!!!!!!!! WAVESHINE COMPLETE: IS THE R BUTTON BEING PRESSED?" + str(controller.current.button[Button.BUTTON_R]) + "!!!!!!!-------")
                 return
         else:
             dashstate = [Action.RUNNING,Action.STANDING,Action.DASHING,Action.TURNING_RUN,Action.TURNING]
+            ws_state = [Action.KNEE_BEND,Action.LANDING_SPECIAL]
+
+            if(ai_state.action in ws_state):
+                print("------Recovery Waveshining------")
+                self.WS.step(controller,ai_state,enemy_state,gamestate.stage)
+                return
+
             if(ai_state.action in dashstate):
                 print("Running away")
                 dashdir=int(ai_state.x<enemy_state.x)
@@ -129,6 +138,7 @@ class ChainWaveShines():
                     dashdir=int(ai_state.x<0)
                 controller.tilt_analog(Button.BUTTON_MAIN,dashdir,0.5)
                 return
+                
             elif(ai_state.action==Action.EDGE_TEETERING):
                 dashdir=int(ai_state.x<0)
                 controller.tilt_analog(Button.BUTTON_MAIN,dashdir,0.5)

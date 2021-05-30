@@ -5,3 +5,4 @@ from tech.running import Run
 from tech.punish import Punish
 from tech.smashattack import SmashAttack
 from tech.intumble import InTumble
+from tech.dashdance import DashDance

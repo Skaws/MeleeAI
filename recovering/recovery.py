@@ -1,6 +1,7 @@
 import melee
 import keyboard
 import math
+import random
 from .firefox import fireFox
 from .illusion import Illusion
 from melee.enums import Action,Button
@@ -27,8 +28,26 @@ def edgeAngleCalc(ai_pos,edgepos):
 
     normalise =  math.sqrt(((dist_y)**2) + ((dist_x)**2))
     xtilt = dist_x/normalise
+    
+    if(abs(ai_pos[0])<abs(edgepos)):
+        xtilt=-xtilt
     ytilt= dist_y/normalise
     return (xtilt,ytilt)
+
+def shouldWait(ai_pos,edgepos):
+    #if the AI is too high up
+    if(ai_pos[1]>88):
+        #return True, they should wait until they've fallen in range
+        return True
+    else:
+        #return False, they're in range so get over theree
+        return False
+def shineStall(aiaction,controller):
+    if("DOWN_B" not in str(aiaction)):
+        controller.tilt_analog(Button.BUTTON_MAIN,0.5,0)
+        controller.press_button(Button.BUTTON_B)
+    else:
+        controller.release_all
 def Recover(ai_state,stage,controller):
     ai_offstage = ai_state.off_stage
     edgepos=getEdgePos(stage,ai_state.x)
@@ -50,9 +69,20 @@ def Recover(ai_state,stage,controller):
                 controller.press_button(Button.BUTTON_A)
         else:
             print("AI current pos " + str(ai_state.y))
-            if(-16.4 < ai_state.y < -5) and (5 < edgedist < 88):
-                Illusion(ai_state.action,controller,ai_state.x,ai_state.y)
+            TooHigh =shouldWait(aiposition,edgepos)
+            
+            print("is the AI too high to recover? " + str(TooHigh))
+            if(TooHigh==False):
+                if(-16.4 < ai_state.y < -5) and (5 < edgedist < 88):
+                    Illusion(ai_state.action,controller,ai_state.x,ai_state.y)
+                else:
+                    print("Attempting Firefox ")
+                    fireFox(ai_state,controller,xdir,ydir)
             else:
-                print("Attempting Firefox ")
-                fireFox(ai_state,controller,xdir,ydir)
+                randshine = random.randint(0,2)
+                if(randshine==0):
+                    print("Stalling")
+                    shineStall(ai_state.action,controller)
+                else:
+                    controller.release_all()
     
