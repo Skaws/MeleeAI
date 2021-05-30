@@ -13,6 +13,12 @@ The LibMelee python Library can be installed through pip using the following com
 
 The ISO file can be obtained through purchasing a copy of Super Smash Bros. Melee and using ISO extraction software to obtain the file. A multitude of methods are available which can be found here: https://ellisworkshop.com/dump-nintendo-discs-gamecube-wii-wiiu-games/
 
-With these 3 requirements met, the project can be run through running the main program: "foxtext.py". 
+After these 3 requirements are met, create a python program called "config.py" in this folder. Within this copy paste the following code:
+
+slippilocation = r"[INSERT SLIPPI FOLDER PATH]"
+
+Replacing the square brackets with the path to the Slippi **folder** (not the executable)
+
+After the config.py file has been setup, the project can now be run through running the main program: "foxtext.py". 
 This will launch the Slippi Dolphin Emulator, after which the game can be started by locating and double clicking the Melee ISO file. 
 After this Melee will launch and the project will begin running.
