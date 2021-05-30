@@ -1,4 +1,4 @@
-# MeleeAI
+# LibMelee AI
 To run this you will need the following:
 
 1.) The Slippi Dolphin Emulator
